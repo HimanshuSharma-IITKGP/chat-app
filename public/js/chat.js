@@ -18,22 +18,29 @@ const { username, room } = Qs.parse(location.search, {
   ignoreQueryPrefix: true,
 });
 
-// const autoScroll = () => {
-//   const $newMessage = $messages.lastElementChild;
-//   const newMessageStyles = getComputedStyle($newMessage);
-//   const newMessageMargin = parseInt(newMessageStyles.marginBottom);
-//   const newMessageHeight = $newMessage.offsetHeight + newMessageMargin;
+const autoScroll = () => {
+  $messages.scrollTop = $messages.scrollHeight;
+  // const $newMessage = $messages.lastElementChild;
+  // const newMessageStyles = getComputedStyle($newMessage);
+  // const newMessageMargin = parseInt(newMessageStyles.marginBottom);
+  // const newMessageHeight = $newMessage.offsetHeight + newMessageMargin;
+  // console.log(newMessageHeight);
 
-//   const visibleHeight = $messages.offsetHeight;
+  // const visibleHeight = $messages.offsetHeight;
+  // console.log('visibleHeight: ' + visibleHeight)
 
-//   const containerHeight = $messages.scrollHeight;
+  // const containerHeight = $messages.scrollHeight;
+  // console.log(`containerHeight: ${containerHeight}`)
 
-//   const scrollOffset = $messages.scrollTop + visibleHeight;
+  // const scrollOffset = $messages.scrollTop + visibleHeight;
+  // console.log(`scrollOffset: ${scrollOffset}`)
 
-//   if(containerHeight - newMessageHeight <= scrollOffset){
-//     $messages.scrollTop = $messages.scrollHeight
-//   }
-// };
+  // if(containerHeight - newMessageHeight <= scrollOffset){
+  //   console.log('scroll')
+  //   $messages.scrollTop = $messages.scrollHeight
+  // }
+};
+
 $messageForm.addEventListener("submit", (event) => {
   event.preventDefault();
   const message = event.target.elements.message.value;
@@ -48,29 +55,30 @@ $messageForm.addEventListener("submit", (event) => {
     if (error) {
       return console.log(error);
     }
-    console.log("message delivered");
+    // console.log("message delivered");
   });
 });
 
 socket.on("message", (data) => {
-  console.log(data);
+  // console.log(data);
   const html = Mustache.render(messageTemplate, {
     username: data.username,
     message: data.text,
     createdAt: moment(data.createAt).format("h:mm a"),
   });
   $messages.insertAdjacentHTML("beforeend", html);
-  // autoScroll();
+  autoScroll();
 });
 
 socket.on("locationMessage", (data) => {
-  console.log(data);
+  // console.log(data);
   const html = Mustache.render(locationMessageTemplate, {
     username: data.username,
     locationUrl: data.url,
     createdAt: moment(data.createdAt).format("h:mm a"),
   });
   $messages.insertAdjacentHTML("beforeend", html);
+  autoScroll();
 });
 
 socket.on("roomData", ({ room, users }) => {
@@ -79,7 +87,6 @@ socket.on("roomData", ({ room, users }) => {
     users,
   });
   $sidebar.innerHTML = html;
-  // autoScroll();
 });
 
 $sendLocationButton.addEventListener("click", () => {
@@ -98,7 +105,7 @@ $sendLocationButton.addEventListener("click", () => {
       },
       (result) => {
         $sendLocationButton.removeAttribute("disabled");
-        console.log(result);
+        // console.log(result);
       }
     );
   });

@@ -47,6 +47,11 @@ io.on("connection", (socket) => {
         "message",
         generateMessage('Admin', `${user.username} has joined`)
       ); // emits the event for all the users except for this one
+
+      io.to(user.room).emit('roomData', {
+        room: user.room,
+        users: getUsersInRoom(user.room)
+      })
     callback();
   });
 
@@ -80,6 +85,11 @@ io.on("connection", (socket) => {
         "message",
         generateMessage('Admin', `${user.username} has left the chat`)
       );
+
+      io.to(user.room).emit("roomData", {
+        room: user.room,
+        users: getUsersInRoom(user.room)
+      })
     }
   });
 });

@@ -3,8 +3,7 @@ const $messageForm = document.querySelector('#message-form');
 const $messageFormInput = $messageForm.querySelector('input');
 const $messageFormButton = $messageForm.querySelector('button')
 const $sendLocationButton = document.querySelector('#send-location')
-const $messages = document.querySelector('#messages')
-const $location = document.querySelector("#location");
+const $messages = document.querySelector('#messages');
 
 
 
@@ -45,7 +44,7 @@ socket.on("locationMessage", (data) => {
     locationUrl: data.url,
     createdAt: moment(data.createdAt).format('h:mm a')
   });
-  $location.insertAdjacentHTML('beforeend', html)
+  $messages.insertAdjacentHTML('beforeend', html)
 });
 
 
